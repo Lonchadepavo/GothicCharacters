@@ -22,20 +22,19 @@ import net.minecraft.server.v1_12_R1.EntityArmorStand;
 import net.minecraft.server.v1_12_R1.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_12_R1.PacketPlayOutSpawnEntityLiving;
 
-public class Main extends JavaPlugin implements Listener{	
-	public Map<ArrayList<UUID>,EntityArmorStand> hiddenmap = new HashMap<ArrayList<UUID>,EntityArmorStand>();
-    //First Player in the List is the hidden one
-	
+public class Main extends JavaPlugin implements Listener{
+	//Declarar las clases del plugin
 	InventarioCustom iCustom;
 	CargarCajas cCajas;
 	RopaAleatoria rAleatoria;
 	
 	public void onEnable() {
-		Bukkit.clearRecipes();
+		//Inicializar las clases que utilizará el plugin (Algunos se inicializan con "this" porque requieren de la clase principal)
 		iCustom = new InventarioCustom(this);
 		cCajas = new CargarCajas(this);
 		rAleatoria = new RopaAleatoria();
 		
+		//Registrar los listeners de cada una de las clases
 		getServer().getPluginManager().registerEvents(this, this);
 		getServer().getPluginManager().registerEvents(this.iCustom, this);
 		getServer().getPluginManager().registerEvents(this.cCajas, this);
@@ -47,13 +46,14 @@ public class Main extends JavaPlugin implements Listener{
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
 		
+		//Cuando un jugador entra por primera vez al servidor le añade el grupo de permisos "Usuario"
 		if (!p.hasPlayedBefore()) {
 			getServer().dispatchCommand(getServer().getConsoleSender(), "upc addGroup" + p.getName() + " Usuario");
 		}
 		
 	}
 	
-	//Bloquear la destrucción de las mochilas
+	//Detecta si rompes un bloque de tipo "BLACK_SHULKER_BOX" y cancela el evento (es una mochila que no pueden romper los usuarios)
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent e) {
 		if (e.getBlock().getType() == Material.BLACK_SHULKER_BOX) {

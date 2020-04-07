@@ -24,15 +24,18 @@ public class RopaAleatoria implements Listener{
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
 		
+		//Comprueba si el jugador entra por primera vez al servidor
 		if (!p.hasPlayedBefore()) {			
-			ArrayList<String> listaItems = getGear();
+			ArrayList<String> listaItems = getGear(); //Lista de ropa que se equipará el player
 			ArrayList<String> listaTipos = new ArrayList<String>(Arrays.asList("CHAINMAIL_HELMET","CHAINMAIL_CHESTPLATE","CHAINMAIL_LEGGINGS","CHAINMAIL_BOOTS"));
 			ArrayList<String> listaTipos2 = new ArrayList<String>(Arrays.asList("CHAINMAIL_CHESTPLATE","CHAINMAIL_LEGGINGS","CHAINMAIL_BOOTS"));
-	
+			
+			//Recorre la lista de items que se equipará el player
 			for (int i = 0; i < listaItems.size(); i++) {
 				ItemStack item;
-				ArrayList<String> listaFinal = new ArrayList<String>(Arrays.asList("CHAINMAIL_HELMET","CHAINMAIL_CHESTPLATE","CHAINMAIL_LEGGINGS","CHAINMAIL_BOOTS"));;
+				ArrayList<String> listaFinal = new ArrayList<String>(Arrays.asList("CHAINMAIL_HELMET","CHAINMAIL_CHESTPLATE","CHAINMAIL_LEGGINGS","CHAINMAIL_BOOTS"));
 				
+				//EStablece la lista final al tipo 1 (con casco) o tipo 2 (sin casco)
 				if (listaItems.size() == 4) {
 					listaFinal = listaTipos;
 				} else if (listaItems.size() == 3) {
@@ -41,10 +44,12 @@ public class RopaAleatoria implements Listener{
 				
 				item = new ItemStack(Material.getMaterial(listaFinal.get(i)));
 				
+				//Le establece el nombre al item
 				ItemMeta meta = item.getItemMeta();
 				meta.setDisplayName(listaItems.get(i));
 				item.setItemMeta(meta);
 				
+				//Establece los NBT Tags al item para modificar sus estadísticas (le establece la armadura a 0 a toda la ropa)
 				net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
 				NBTTagCompound compound = (nmsStack.hasTag()) ? nmsStack.getTag() : new NBTTagCompound();
 				NBTTagList modifiers = new NBTTagList();
@@ -64,22 +69,27 @@ public class RopaAleatoria implements Listener{
 				
 				nmsStack.setTag(compound);
 				
+				//Le da el item al player
 				item = CraftItemStack.asBukkitCopy(nmsStack);
 				p.getInventory().addItem(item);
 			}
 		}
 		
 	}
-
+	
+	//Método que decide de manera aleatoria que items de ropa llevará un jugador
 	public ArrayList<String> getGear() {
 		
-		int needsArmor = (int) (Math.random()*100)+0, needsHelmet = (int) (Math.random()*100)+0;
-
+		int needsArmor = (int) (Math.random()*100)+0; //Probabilidad de que un jugador lleve ropa o no
+		int needsHelmet = (int) (Math.random()*100)+0; //Probabilidad de que un jugador lleve casco o no
+		
+		//Listas con todas las ropas que puede llevar un jugador
 		ArrayList<String> helmets = new ArrayList<String>(Arrays.asList("§fCapucha de cuero", "§fCapucha de cuero oscuro"));
 		ArrayList<String> armors = new ArrayList<String>(Arrays.asList("§fAbrigo de cuero", "§fAbrigo de cuero oscuro"));
 		ArrayList<String> pants = new ArrayList<String>(Arrays.asList("§fPantalones de trabajo", "§fPantalones de cuero", "§fPantalones negros", "§fPantalones marrones", "§fPantalones rojos", "§fPantalones amarillos", "§fTunica roja"));
 		ArrayList<String> shoes = new ArrayList<String>(Arrays.asList("§fZapatos de cuero", "§fBotas de cuero oscuro", "§fBotas de cuero negro", "§fBotas altas de cuero"));
 		
+		//Lista de la ropa que llevará el jugador
 		ArrayList<String> equipement = new ArrayList<String>();
 		
 		int szHelmets = helmets.size(), szArmors = armors.size(), szPants = pants.size(), szShoes = shoes.size(), temp;
