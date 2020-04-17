@@ -34,7 +34,7 @@ public class Main extends JavaPlugin implements Listener{
 		cCajas = new CargarCajas(this);
 		rAleatoria = new RopaAleatoria();
 		
-		//Pene
+		//Pene segundo
 		//Registrar los listeners de cada una de las clases
 		getServer().getPluginManager().registerEvents(this, this);
 		getServer().getPluginManager().registerEvents(this.iCustom, this);
