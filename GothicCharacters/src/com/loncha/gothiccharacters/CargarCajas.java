@@ -3,6 +3,9 @@ package com.loncha.gothiccharacters;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,6 +16,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -59,12 +63,12 @@ public class CargarCajas implements Listener {
 				//Si estás recogiendo un item custom pero no es una mochila cancela el evento de recogida
 				if (item.hasItemMeta()) {
 					if (!item.getItemMeta().getDisplayName().contains("Mochila")) {
-						e.setCancelled(true);
+						//e.setCancelled(true);
 					}
 					
 				//Si no estás recogiendo un item custom cancela el evento de recogida
 				} else {
-					e.setCancelled(true);
+					//e.setCancelled(true);
 				}
 				
 			} else { //Si el inventario no está ocupado y estás recogiendo una caja ("SHULKER")
@@ -127,7 +131,16 @@ public class CargarCajas implements Listener {
 		if (b.getType().toString().contains("SHULKER")) {
 			for (PotionEffect pEf : p.getActivePotionEffects()) {
 				if (pEf.getType().toString().contains("SLOW")) {
-					p.removePotionEffect(pEf.getType());
+		            BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+		            scheduler.scheduleSyncDelayedTask(m, new Runnable() {
+		                @Override
+		                public void run() {
+							if (b.getType().toString().contains("SHULKER")) {
+								p.removePotionEffect(pEf.getType());
+							}
+		                }
+		            }, 10);
+
 				}
 			}
 		}
