@@ -113,7 +113,9 @@ public class Main extends JavaPlugin implements Listener{
 				}
 			}
 		} else {
-			p.setDisplayName(com.loncha.gothicchat.Main.datosFicha.get(p)[0]);
+			if (com.loncha.gothicchat.Main.datosFicha.get(p) != null) {
+				p.setDisplayName(com.loncha.gothicchat.Main.datosFicha.get(p)[0]);
+			}
 		}
 	}
 
